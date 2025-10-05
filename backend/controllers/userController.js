@@ -122,4 +122,4 @@ const testEmail = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, authUser, getUsers, getUserById, forgotPassword, resetPassword, testEmail };
+export { registerUser, authUser, getUsers, getUserById, testEmail };
