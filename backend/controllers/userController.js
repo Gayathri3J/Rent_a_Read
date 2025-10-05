@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import mongoose from 'mongoose';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
-import { sendWelcomeEmail, sendPasswordResetEmail } from '../utils/email.js';
+import { sendWelcomeEmail } from '../utils/email.js';
 
 /**
  * @desc    Register a new user
@@ -105,60 +105,7 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * @desc    Forgot password - send reset email
- * @route   POST /api/users/forgot-password
- * @access  Public
- */
-const forgotPassword = asyncHandler(async (req, res) => {
-  const { email } = req.body;
 
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    res.status(404);
-    throw new Error('User not found');
-  }
-
-  // Generate reset token
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  const resetTokenExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
-
-  user.resetToken = resetToken;
-  user.resetTokenExpiry = resetTokenExpiry;
-  await user.save();
-
-  // Send reset email
-  await sendPasswordResetEmail(user.email, resetToken);
-
-  res.json({ message: 'Password reset email sent' });
-});
-
-/**
- * @desc    Reset password
- * @route   POST /api/users/reset-password
- * @access  Public
- */
-const resetPassword = asyncHandler(async (req, res) => {
-  const { token, password } = req.body;
-
-  const user = await User.findOne({
-    resetToken: token,
-    resetTokenExpiry: { $gt: Date.now() }
-  });
-
-  if (!user) {
-    res.status(400);
-    throw new Error('Invalid or expired token');
-  }
-
-  user.password = password;
-  user.resetToken = undefined;
-  user.resetTokenExpiry = undefined;
-  await user.save();
-
-  res.json({ message: 'Password reset successful' });
-});
 
 /**
  * @desc    Test email sending
