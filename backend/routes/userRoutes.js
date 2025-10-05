@@ -14,6 +14,6 @@ router.get(['/login', '/test-email'], (req, res) => {
   throw new Error(`GET method is not supported for ${req.path}. Please use POST.`);
 });
 
-router.route('/:id').get(protect, getUserById);
+router.route('/:id').get(getUserById);
 
 export default router;

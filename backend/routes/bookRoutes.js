@@ -8,6 +8,11 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+router.get('/mybooks', protect, getMyBooks);
+router.get('/popular', getPopularBooks);
+router.get('/', getBooks);
+router.delete('/:id', protect, deleteBook);
+router.get('/:id', getBookById);
 router.post(
   '/',
   protect,
@@ -17,12 +22,5 @@ router.post(
   ]),
   addBook
 );
-
-router.get('/', getBooks);
-router.get('/mybooks', protect, getMyBooks);
-router.get('/popular', getPopularBooks);
-router.get('/:id', getBookById);
-router.delete('/:id', protect, deleteBook);
-
 
 export default router;

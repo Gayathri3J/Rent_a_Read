@@ -181,7 +181,7 @@ const getBooks = asyncHandler(async (req, res) => {
       $lookup: {
         from: 'users', // The collection name for User model
         localField: 'owner',
-        foreignField: 'id',
+        foreignField: '_id',
         as: 'ownerInfo'
       }
     },
@@ -195,10 +195,6 @@ const getBooks = asyncHandler(async (req, res) => {
   }
 
   const books = await Book.aggregate(pipeline);
-
-  // The result of aggregation is plain JS objects, not Mongoose documents.
-  // We need to manually populate owner details.
-  await Book.populate(books, { path: 'owner', select: 'name' });
 
   res.json(books);
 });
@@ -326,7 +322,7 @@ const getPopularBooks = asyncHandler(async (req, res) => {
       $lookup: {
         from: 'users', // The collection name for User model
         localField: 'owner',
-        foreignField: 'id',
+        foreignField: '_id',
         as: 'ownerInfo'
       }
     },
