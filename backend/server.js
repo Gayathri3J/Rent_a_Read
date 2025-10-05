@@ -36,18 +36,24 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Frontend URL from env
-    methods: ["GET", "POST"]
-  }
+    cors: {
+        origin: [
+            process.env.FRONTEND_URL || "http://localhost:5173",
+            "https://rent-a-read-7zjpeomxm-gayathri-js-projects-e0ebc24c.vercel.app"
+        ],
+        methods: ["GET", "POST"]
+    }
 });
 
 const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  credentials: true
+    origin: [
+        process.env.FRONTEND_URL || "http://localhost:5173",
+        "https://rent-a-read-7zjpeomxm-gayathri-js-projects-e0ebc24c.vercel.app"
+    ],
+    credentials: true
 })); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // To parse JSON bodies
 app.use('/uploads', express.static('uploads')); // Serve uploaded files
