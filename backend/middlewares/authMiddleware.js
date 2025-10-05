@@ -14,6 +14,12 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await User.findById(decoded.id).select('-password');
 
+      if (!req.user) {
+        // This handles the case where the user for a valid token has been deleted.
+        res.status(401);
+        throw new Error('Not authorized, user not found');
+      }
+
       if (req.user && req.user.isSuspended) {
         res.status(403);
         throw new Error('Your account has been suspended. Please contact support.');
